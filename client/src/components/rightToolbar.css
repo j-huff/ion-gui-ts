@@ -1,0 +1,19 @@
+
+
+.right-toolbar{
+    margin-top:10px;
+    margin-right:10px;
+    width:350px;
+}
+
+.right-toolbar .card-body{
+    padding:15px;
+}
+
+.right-toolbar .tab-content{
+    padding-top:10px;
+}
+
+.right-toolbar h4{
+    cursor: pointer;
+}
