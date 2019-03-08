@@ -20,6 +20,9 @@ import {
 } from "reactstrap";
 
 import './rightToolbar.css'
+import './main.css'
+import {connect} from "react-redux";
+import {setRightToolbarTab,toggleCollapsible} from "../store/editorGui/actions";
 
 export enum RightToolbarTabs{
     Nodes,
@@ -28,75 +31,97 @@ export enum RightToolbarTabs{
 
 export enum RightToolbarCollapsibles{
     ProjectSettings,
+    NodeSettings,
+    Contacts,
+    Ranges,
+    ProtocolSettings,
 }
 
-const RightToolbar = (state:EditorState,handleAction:ActionHandler) =>{
+class RightToolbar extends React.Component<Props, {}> {
 
 
-    let getCollapseIcon = (collapsible:RightToolbarCollapsibles) =>{
-        return state.guiState.rightToolbarCollapsibles[collapsible] === true ? "\u25BE": "\u25B8"
-    }
 
-    return(
-        <Card className="right-toolbar">
-            <CardBody>
-                <Nav tabs>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({ active: true})}
+    render() {
+        let getCollapseIcon = (collapsible:RightToolbarCollapsibles) =>{
+            // return ""
+            return this.props.collapsibles[collapsible] === true ? "\u25BE": "\u25B8"
+        }
 
-                        >
-                            Tab1
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink
-                            className={classnames({ active: false })}
-                        >
-                            Moar Tabs
-                        </NavLink>
-                    </NavItem>
-                </Nav>
-                <TabContent activeTab={"1"}>
-                    <TabPane tabId="1">
-                        <h4
-                            onClick={()=>handleAction(ActionType.ToggleRightToolbarCollapsible, {collapsible:RightToolbarCollapsibles.ProjectSettings})}
-                            color="primary" style={{ marginBottom: '1rem' }}>
-                            Project Settings {getCollapseIcon(RightToolbarCollapsibles.ProjectSettings)}
-                        </h4>
-                        <Collapse isOpen={state.guiState.rightToolbarCollapsibles[RightToolbarCollapsibles.ProjectSettings] === true}>
-                            <Card>
-                                <CardBody>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt magni, voluptas debitis
-                                    similique porro a molestias consequuntur earum odio officiis natus, amet hic, iste sed
-                                    dignissimos esse fuga! Minus, alias.
-                                </CardBody>
-                            </Card>
-                        </Collapse>
-                        <hr/>
-                    </TabPane>
-                    <TabPane tabId="2">
-                        <Row>
-                            <Col sm="6">
-                                <Card body>
-                                    <CardTitle>Special Title Treatment</CardTitle>
-                                    <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                                    <Button>Go somewhere</Button>
-                                </Card>
-                            </Col>
-                            <Col sm="6">
-                                <Card body>
-                                    <CardTitle>Special Title Treatment</CardTitle>
-                                    <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                                    <Button>Go somewhere</Button>
-                                </Card>
-                            </Col>
-                        </Row>
-                    </TabPane>
-                </TabContent>
-            </CardBody>
-        </Card>
-    );
+        const Collapsible = (actionType:ActionType,collapsible:RightToolbarCollapsibles,title:string, inner:Function) => {
+            console.log("Collapse")
+            console.log(this);
+            return(
+                <div className="collapsible">
+                    <h4
+                        onClick={()=>this.props.toggleCollapsible({id:collapsible})}
+                        color="primary" style={{ marginBottom: '1rem' }}>
+                        {title} <div className="collapse-icon"> {getCollapseIcon(collapsible)}</div>
+                    </h4>
+                    {inner()}
+                </div>
+            )
+        }
+
+
+        let activeTab = this.props.activeTab;
+
+        return (
+            <Card className="right-toolbar">
+                <CardBody>
+                    <Nav tabs className="unselectable">
+                        <NavItem>
+                            <NavLink
+                                className={classnames({active: activeTab == RightToolbarTabs.Nodes})}
+                                onClick={() => this.props.setRightToolbarTab({tab: RightToolbarTabs.Nodes})}
+                            >
+                                Nodes
+                            </NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink
+                                className={classnames({active: activeTab == RightToolbarTabs.Links})}
+                                onClick={() => this.props.setRightToolbarTab({tab: RightToolbarTabs.Links})}
+                            >
+                                Links
+                            </NavLink>
+                        </NavItem>
+                    </Nav>
+                    <TabContent activeTab={this.props.activeTab}>
+                        <TabPane tabId={RightToolbarTabs.Nodes}>
+                            <div className="collapsible">
+                                <h4
+                                    onClick={()=>this.props.toggleCollapsible({id:RightToolbarCollapsibles.ProjectSettings})}
+                                    color="primary" style={{ marginBottom: '1rem' }}>
+                                    Project Settings
+                                    <div className="collapse-icon"> {getCollapseIcon(RightToolbarCollapsibles.ProjectSettings)}</div>
+                                </h4>
+                                <Collapse isOpen={this.props.collapsibles[RightToolbarCollapsibles.ProjectSettings]}>
+                                    HELLO
+                                </Collapse>
+                            </div>
+                            <hr/>
+
+
+                        </TabPane>
+                        <TabPane tabId={RightToolbarTabs.Links}>
+
+                        </TabPane>
+                    </TabContent>
+                </CardBody>
+            </Card>
+        )
+    };
 }
 
-export default RightToolbar;
+interface Props {
+    activeTab:number,
+    collapsibles:any
+    setRightToolbarTab:any
+    toggleCollapsible:any
+}
+const mapStateToProps = state => ({
+    collapsibles:state.editorGui.collapsibles,
+    activeTab: state.editorGui.rightToolbarActiveTab
+})
+
+export default connect(mapStateToProps,{setRightToolbarTab,toggleCollapsible})(RightToolbar)

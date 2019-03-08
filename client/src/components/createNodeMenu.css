@@ -1,0 +1,11 @@
+#create-node-menu{
+    position:absolute;
+    width:350px;
+    background-color:white;
+}
+
+.submitButtonWrapper{
+    width:100%;
+    display:inline-flex;
+    flex-direction: row-reverse;
+}

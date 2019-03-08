@@ -1,5 +1,6 @@
 import Node from './node';
 
+
 class Config{
     nodes:Array<Node>;
 

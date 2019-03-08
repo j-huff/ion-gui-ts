@@ -4,9 +4,10 @@ import './bootstrap/css/bootstrap.css';
 // import Error404 from './errorPages/error404';
 import Home from './components/home';
 import {BrowserRouter, Route} from 'react-router-dom';
+import {Provider} from 'react-redux'
+import store from './store';
 
-
-export interface AppProps {}
+export interface AppProps {};
 export interface AppState {};
 
 class App extends React.Component<AppProps, AppState> {
@@ -19,6 +20,7 @@ class App extends React.Component<AppProps, AppState> {
   render(){
 
       return(
+          <Provider store={store}>
           <div id="App" className="App">
               <BrowserRouter>
                   <div>
@@ -27,7 +29,9 @@ class App extends React.Component<AppProps, AppState> {
                   </div>
               </BrowserRouter>
           </div>
+          </Provider>
       );
+
   }
 }
 

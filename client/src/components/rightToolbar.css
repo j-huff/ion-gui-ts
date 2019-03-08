@@ -1,5 +1,4 @@
 
-
 .right-toolbar{
     margin-top:10px;
     margin-right:10px;
@@ -10,10 +9,22 @@
     padding:15px;
 }
 
+.right-toolbar .nav-tabs{
+    cursor:pointer;
+}
+
 .right-toolbar .tab-content{
-    padding-top:10px;
 }
 
 .right-toolbar h4{
     cursor: pointer;
+}
+
+.collapse-icon{
+    margin-left:5px;
+    display: inline-block;
+}
+
+.collapsible{
+    margin-top:10px;
 }
